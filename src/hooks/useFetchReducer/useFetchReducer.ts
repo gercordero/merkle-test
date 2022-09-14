@@ -14,13 +14,12 @@ type Action<T> =
   | { type: "success"; payload: T }
   | { type: "error"; payload: Error };
 
-const useFetchReducer = <T = any>(): [
-  FetchReducerState<T>,
-  Dispatch<Action<T>>,
-] => {
+const useFetchReducer = <T = any>(
+  data?: T,
+): [FetchReducerState<T>, Dispatch<Action<T>>] => {
   const initialState: FetchReducerState<T> = {
     error: undefined,
-    data: undefined,
+    data: data ?? undefined,
     status: "loading",
   };
 
