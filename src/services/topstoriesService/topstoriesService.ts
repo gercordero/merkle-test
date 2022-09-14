@@ -2,10 +2,16 @@
 import { request } from "@/services/clients/HackerAPIClient";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 // Helpers
-import getMultipleRandom from "./helpers/getMultipleRandom";
-// Types
-import { TopStories } from "@/types/HackerAPITypes";
 import { isEmpty } from "@/helpers";
+import {
+  getMultipleRandom,
+  getRandomImages,
+} from "@/services/topstoriesService/helpers";
+// Types
+import { Item, TopStories, User } from "@/types/HackerAPITypes";
+// Services
+import { getSortedItemsByScore } from "@/services/itemService/itemService";
+import { getUsers } from "@/services/userService/userService";
 
 export const getTopStories = async (
   options?: AxiosRequestConfig,
@@ -30,4 +36,33 @@ export const getRandomTopStories = async (
   const randomTopStories = getMultipleRandom(topStories, maxLimit);
 
   return randomTopStories;
+};
+
+export interface TopStoriesWithAuthors extends Item {
+  author?: User;
+}
+
+export const getRandomTopStoriesWithAuthors = async (
+  limit: number,
+  options?: AxiosRequestConfig,
+): Promise<TopStoriesWithAuthors[]> => {
+  // Get random top stories using the limit param
+  const randomTopStories = (await getRandomTopStories(limit, options)) ?? [];
+  // Get storyItems sorted in ascending order
+  const storyItems = await getSortedItemsByScore(randomTopStories, options);
+  // Get author id from each story item
+  const authorsIds = storyItems.map(item => item?.by ?? "");
+  // Get a list of author details
+  const usersResponse = await getUsers(authorsIds, options);
+  // We are just interested in the data here, not the entire response.
+  const authors = usersResponse.map(user => user?.data);
+
+  // Attach author details and random image to storyItems
+  const storyItemsWithAuthors = storyItems.map((item, index) => ({
+    ...(item as Item),
+    author: authors.find(author => author?.id === item?.by),
+    image: getRandomImages(limit)[index],
+  }));
+
+  return storyItemsWithAuthors;
 };
