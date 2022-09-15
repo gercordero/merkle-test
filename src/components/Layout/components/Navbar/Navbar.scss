@@ -1,0 +1,14 @@
+@use "@/styles/abstracts/mixins" as *;
+
+.navbar {
+  background-color: var(--clr-neutral-800);
+  padding: 1rem;
+
+  &__logo {
+    color: var(--clr-neutral-100);
+  }
+
+  @include mq(small) {
+    padding: 1rem 2rem;
+  }
+}
