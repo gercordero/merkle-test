@@ -1,0 +1,18 @@
+@use "@/styles/abstracts/mixins" as *;
+
+.home {
+  display: flex;
+  flex-direction: column;
+  padding: 3rem;
+  gap: 1rem;
+
+  @include mq(small) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 17rem);
+    padding: 2rem;
+  }
+
+  @include mq(medium) {
+    grid-template-columns: repeat(auto-fit, 22rem);
+  }
+}
