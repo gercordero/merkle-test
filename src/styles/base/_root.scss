@@ -1,15 +1,10 @@
 @use "@/styles/abstracts" as *;
 
 :root {
-  --section-spacing: 3.5rem;
-  @include mq(medium) {
-    --section-spacing: 7rem;
-  }
-
   // Map colors to custom css properties
   @each $color, $shade in $colors {
     @each $prop, $value in $shade {
-      --clr-#{$color}-#{$prop}: #{$value};
+      --clr-#{"" + $color}-#{$prop}: #{$value};
     }
   }
 
