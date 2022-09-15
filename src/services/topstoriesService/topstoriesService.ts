@@ -40,6 +40,7 @@ export const getRandomTopStories = async (
 
 export interface TopStoriesWithAuthors extends Item {
   author?: User;
+  image: string;
 }
 
 export const getRandomTopStoriesWithAuthors = async (
@@ -56,12 +57,14 @@ export const getRandomTopStoriesWithAuthors = async (
   const usersResponse = await getUsers(authorsIds, options);
   // We are just interested in the data here, not the entire response.
   const authors = usersResponse.map(user => user?.data);
+  // Get random images
+  const randomizedImages = getRandomImages(limit);
 
   // Attach author details and random image to storyItems
   const storyItemsWithAuthors = storyItems.map((item, index) => ({
     ...(item as Item),
     author: authors.find(author => author?.id === item?.by),
-    image: getRandomImages(limit)[index],
+    image: randomizedImages[index],
   }));
 
   return storyItemsWithAuthors;

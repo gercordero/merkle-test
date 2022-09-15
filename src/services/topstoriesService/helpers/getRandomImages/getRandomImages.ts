@@ -9,7 +9,9 @@ const getRandomImages = (limit: number): string[] => {
     getImageUrl(`${index + 1}`),
   );
 
-  return getMultipleRandom(imagesUrls, limit);
+  const randomizedImagesUrls = getMultipleRandom(imagesUrls, limit);
+
+  return randomizedImagesUrls;
 };
 
 export default getRandomImages;
